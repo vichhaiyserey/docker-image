@@ -1,0 +1,31 @@
+name: Push and scan Docker image
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    name: Build and scan Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build Docker image
+        run: |
+          docker build -t my-docker-image:${{ github.sha }} .
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: my-docker-image:${{ github.sha }}
+          format: table
+          output: trivy-scan-results.txt
+      - name: Push Docker image to Docker Hub
+        uses: docker/build-push-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: my-docker-image
+          tag: ${{ github.sha }}

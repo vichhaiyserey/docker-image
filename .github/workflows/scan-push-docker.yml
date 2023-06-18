@@ -2,10 +2,10 @@ name: Push and scan Docker image
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   build:
     name: Build and scan Docker image

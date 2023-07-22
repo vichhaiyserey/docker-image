@@ -22,9 +22,9 @@ jobs:
         run: |
           docker build . -t vserey/django.nv:latest
           docker build . -t vserey/django.nv:${{ github.sha }}
-          
+
       - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v2
         with:
           image-ref: vserey/django.nv:${{ github.sha }}
           severity: CRITICAL
